@@ -1,0 +1,15 @@
+pandas
+numpy
+scikit-learn
+networkx
+matplotlib
+seaborn
+requests
+python-dotenv
+jupyter
+ipykernel
+tqdm
+beautifulsoup4
+lxml
+google-cloud-bigquery
+db-dtypes

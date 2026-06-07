@@ -1,0 +1,90 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Environments
+.env
+.env.*
+.venv/
+venv/
+env/
+
+# Credentials and local cloud configuration
+*credentials*.json
+application_default_credentials.json
+service-account*.json
+*.pem
+*.key
+.secrets/
+secrets/
+.gcloud/
+.boto
+
+# Large or source-restricted data
+data/raw/*
+data/interim/*
+data/processed/*
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+
+# Generated outputs
+outputs/*
+!outputs/figures/
+outputs/figures/*
+!outputs/figures/.gitkeep
+
+# Large row-level diagnostics are reproducible but not needed in the public repo
+reports/tables/*predictions*.csv
+reports/tables/test_predictions_selected.csv
+
+# Public release keeps only paper-facing reports, figures, and compact tables
+reports/*.md
+!reports/panel_benchmark_dataset_summary.md
+!reports/panel_benchmark_results.md
+!reports/panel_benchmark_delta_checks.md
+!reports/panel_benchmark_paper_conclusion.md
+!reports/panel_counterfactual_network_swap.md
+!reports/panel_leave_one_country_out.md
+!reports/panel_network_mechanism_checks.md
+!reports/placebo_checks.md
+
+reports/figures/*.png
+!reports/figures/fig_pipeline_overview.png
+!reports/figures/fig_all_country_supply_chain_network.png
+!reports/figures/fig_panel_model_comparison_pr_auc.png
+!reports/figures/fig_panel_pr_auc_by_fold.png
+!reports/figures/fig_panel_target_exposure_timeseries.png
+!reports/figures/fig_panel_m5_delta_bootstrap.png
+!reports/figures/fig_panel_counterfactual_network_swap.png
+!reports/figures/fig_panel_leave_one_country_out.png
+
+reports/tables/*.csv
+!reports/tables/panel_benchmark_summary.csv
+!reports/tables/panel_benchmark_metrics_by_fold.csv
+!reports/tables/panel_benchmark_m5_deltas.csv
+!reports/tables/panel_counterfactual_network_swap_summary.csv
+!reports/tables/panel_leave_one_country_out_summary.csv
+!reports/tables/panel_network_mechanism_correlations.csv
+!reports/tables/placebo_results.csv
+!reports/tables/paper_figure_table_inventory.csv
+
+# Local exploratory notebooks and system files
+notebooks/*.ipynb
+!notebooks/reproduce_panel_benchmark.ipynb
+!notebooks/README.md
+*.log
+.DS_Store
+Thumbs.db
+
+# Keep research proposal drafts local unless intentionally shared
+*.docx
+*.doc
+*proposal*
+*draft*
+~$*.docx
