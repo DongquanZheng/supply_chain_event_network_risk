@@ -1,121 +1,84 @@
-# Event-Informed Port Disruption Prediction with Network-Weighted Trade Exposure
+# Supply Chain Event Network Risk
 
-This repository builds a reproducible applied data science benchmark for next-week abnormal container port activity prediction.
+Reproducible Python code for building and evaluating event-informed port disruption prediction features.
 
-The core question is:
+The repository combines:
 
-> Do external event signals improve port disruption prediction beyond operational baselines, and does trade-network-weighted exposure add value over simpler unweighted event controls?
+- PortWatch-style weekly country-level container port activity.
+- WITS bilateral import dependency weights.
+- Cached GDELT GKG country-week event features.
+- Temporal benchmark models for next-week abnormal container activity.
 
-The project combines three layers:
+The network layer is implemented as an exposure-mapping feature construction step. It should not be interpreted as a causal effect estimate.
 
-- **ML operational baseline**: lagged PortWatch container activity, rolling volatility, trend, seasonality, and country fixed effects.
-- **NLP/event layer**: GDELT GKG country-week event signals, including tone, negative article shares, and disruption-oriented event counts.
-- **Network layer**: WITS bilateral import dependency weights that map external event pressure into target-country exposure.
+## Repository Scope
 
-The network layer is treated as an exposure-mapping and interpretation mechanism, not as a causal effect.
-
-## Current Benchmark Status
-
-The main benchmark is now an 11-country panel covering the currently mapped GDELT/ISO3 countries:
-
-Japan, China, Korea, United States, Australia, United Arab Emirates, Saudi Arabia, Vietnam, Thailand, Indonesia, and Germany.
-
-The processed panel dataset contains:
-
-- 2,860 country-week rows
-- 314 positive next-week abnormal container labels
-- 2020-12-28 to 2025-12-29 weekly coverage
-- no missing values in the processed benchmark table
-
-The current formal result is directional:
-
-- The strongest average Random Forest PR-AUC across 2023, 2024, and 2025 rolling-origin test folds comes from `M5_me_strict_network`.
-- The gain over simpler and placebo alternatives is modest, and paired bootstrap intervals cross zero.
-- The defensible claim is that commodity-specific network exposure is a useful benchmark feature and attribution layer, not that it conclusively dominates every alternative.
-
-See:
-
-- `reports/panel_benchmark_results.md`
-- `reports/panel_benchmark_delta_checks.md`
-- `reports/panel_benchmark_paper_conclusion.md`
-- `docs/DECISIONS_AND_RESULTS.md`
-
-## Data Sources
-
-- **PortWatch / IMF-style ArcGIS service**: country-level daily port activity, aggregated to weekly container port calls.
-- **WITS / World Bank Trade Stats API**: 2023 bilateral import dependency weights.
-- **GDELT GKG via BigQuery**: cached country-week event features.
-
-BigQuery queries must use partition filters and dry-run cost estimation before execution. Cached GDELT outputs are stored under `data/interim/` and are not intended to be committed if large.
-
-## Public Release Policy
-
-This repository is script-first. Exploratory notebooks, private proposal drafts, credentials, raw/interim/processed data caches, and row-level prediction dumps are excluded from version control.
-
-The public repository keeps reproducible code, documentation, aggregate benchmark outputs, and publication-style figures. See `docs/PUBLIC_RELEASE_CHECKLIST.md` for the release boundary.
-
-## Repository Structure
+This public repository is code-first. It includes only the files needed to reproduce the benchmark pipeline:
 
 ```text
 data/
-  interim/       cached API and BigQuery-derived intermediate data
-  processed/     model-ready benchmark datasets
-docs/            decisions, methodology, benchmark plan
-paper/           paper outline and cautious claim variants
-reports/
-  figures/       generated paper-style figures
-  tables/        generated metrics, predictions, diagnostics
-scripts/         reproducible data and modeling scripts
-src/             reusable data-source and exposure helpers
+  raw/           placeholder only
+  interim/       placeholder only; cached input files are local
+  processed/     placeholder only; generated datasets are local
+notebooks/
+  reproduce_panel_benchmark.ipynb
+scripts/         data, modeling, robustness, and figure-generation scripts
+src/             reusable data and feature-construction helpers
 tests/           fast offline integrity tests
+requirements.txt
 ```
 
-## Reproducible Pipeline
+Private research notes, paper drafts, generated reports, large data files, notebooks with exploratory outputs, and credentials are intentionally excluded from version control.
 
-Run from the project root.
+## Setup
+
+```bash
+pip install -r requirements.txt
+```
+
+## Required Local Inputs
+
+The main panel pipeline expects cached GDELT feature files under `data/interim/`:
+
+```text
+data/interim/gkg_partner_event_features_2021-01-01_2025-12-31.csv
+data/interim/gkg_partner_me_strict_event_features_2021-01-01_2025-12-31.csv
+```
+
+These files should be generated from partition-filtered GDELT GKG BigQuery queries and kept local. They are not committed to GitHub.
+
+## Reproduce
+
+Run the full workflow from the project root:
 
 ```bash
 python scripts/build_panel_benchmark_dataset.py
 python scripts/run_panel_benchmark_models.py
-python scripts/analyze_panel_benchmark_deltas.py
 python scripts/make_panel_benchmark_figures.py
+python scripts/make_supply_chain_network_overview.py
 python -m unittest discover -s tests
 ```
 
-Primary outputs:
+Or run:
 
-- `data/processed/multicountry_container_event_network_benchmark.csv`
-- `reports/panel_benchmark_dataset_summary.md`
-- `reports/panel_benchmark_results.md`
-- `reports/panel_benchmark_delta_checks.md`
-- `reports/panel_benchmark_paper_conclusion.md`
-- `reports/tables/panel_benchmark_summary.csv`
-- `reports/tables/panel_benchmark_metrics_by_fold.csv`
-- `reports/tables/panel_benchmark_m5_deltas.csv`
-- `reports/figures/fig_panel_model_comparison_pr_auc.png`
-- `reports/figures/fig_panel_pr_auc_by_fold.png`
-- `reports/figures/fig_panel_target_exposure_timeseries.png`
-- `reports/figures/fig_panel_m5_delta_bootstrap.png`
+```text
+notebooks/reproduce_panel_benchmark.ipynb
+```
 
-## Benchmark Models
+Generated datasets, reports, tables, and figures are written locally under `data/processed/` and `reports/`.
 
-- `M1_operational`: operational baseline only.
-- `M2_own_country_news`: operational baseline plus own-country event controls.
-- `M3_external_unweighted_events`: operational baseline plus unweighted external partner-event controls.
-- `M4_total_import_network`: operational baseline plus total-import network-weighted exposure.
-- `M5_me_strict_network`: operational baseline plus machinery/electronics strict network exposure.
-- `M6`: placebo alternatives using equal, shuffled, and random network weights.
-- `M7_full_event_network`: supplementary combined feature model.
+## Data Sources
 
-Evaluation uses temporal rolling-origin validation only. Thresholds are selected on validation years, not test years. PR-AUC is the primary metric because abnormal port-activity labels are rare.
+- PortWatch-style ArcGIS service for country-level port activity.
+- World Bank WITS Trade Stats API for bilateral import dependency weights.
+- GDELT GKG via BigQuery for event signals.
 
-## Limitations
+BigQuery queries should always use partition filters and dry-run cost checks before execution.
 
-- The network weights are static 2023 WITS import dependencies.
-- The current PortWatch target is country-level, not port-level.
-- GDELT GKG features are event proxies, not manually validated full-text NLP labels.
-- Current network gains are directional and should be reported with placebo and bootstrap caveats.
+## Tests
 
-## Citation Placeholder
+```bash
+python -m unittest discover -s tests
+```
 
-Citation details will be added after the benchmark paper draft is prepared.
+The tests check schema expectations, temporal split ordering, leakage guardrails, and deterministic placebo behavior.

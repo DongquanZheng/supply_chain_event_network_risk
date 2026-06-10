@@ -39,40 +39,24 @@ outputs/*
 outputs/figures/*
 !outputs/figures/.gitkeep
 
-# Large row-level diagnostics are reproducible but not needed in the public repo
-reports/tables/*predictions*.csv
-reports/tables/test_predictions_selected.csv
+# Generated reports and paper-facing outputs stay local
+reports/
+paper/
+docs/
 
-# Public release keeps only paper-facing reports, figures, and compact tables
-reports/*.md
-!reports/panel_benchmark_dataset_summary.md
-!reports/panel_benchmark_results.md
-!reports/panel_benchmark_delta_checks.md
-!reports/panel_benchmark_paper_conclusion.md
-!reports/panel_counterfactual_network_swap.md
-!reports/panel_leave_one_country_out.md
-!reports/panel_network_mechanism_checks.md
-!reports/placebo_checks.md
-
-reports/figures/*.png
-!reports/figures/fig_pipeline_overview.png
-!reports/figures/fig_all_country_supply_chain_network.png
-!reports/figures/fig_panel_model_comparison_pr_auc.png
-!reports/figures/fig_panel_pr_auc_by_fold.png
-!reports/figures/fig_panel_target_exposure_timeseries.png
-!reports/figures/fig_panel_m5_delta_bootstrap.png
-!reports/figures/fig_panel_counterfactual_network_swap.png
-!reports/figures/fig_panel_leave_one_country_out.png
-
-reports/tables/*.csv
-!reports/tables/panel_benchmark_summary.csv
-!reports/tables/panel_benchmark_metrics_by_fold.csv
-!reports/tables/panel_benchmark_m5_deltas.csv
-!reports/tables/panel_counterfactual_network_swap_summary.csv
-!reports/tables/panel_leave_one_country_out_summary.csv
-!reports/tables/panel_network_mechanism_correlations.csv
-!reports/tables/placebo_results.csv
-!reports/tables/paper_figure_table_inventory.csv
+# Exploratory analysis scripts stay local
+scripts/analyze_*.py
+scripts/run_nlp_taxonomy_experiment.py
+scripts/run_placebo_checks.py
+scripts/run_rolling_origin_check.py
+scripts/run_panel_leave_one_country_out.py
+scripts/run_panel_counterfactual_network_swap.py
+scripts/run_panel_m1_m2_sanity.py
+scripts/build_benchmark_dataset.py
+scripts/build_nlp_taxonomy_features.py
+scripts/fetch_gkg_nlp_candidate_docs.py
+scripts/make_benchmark_figures.py
+scripts/run_benchmark_models.py
 
 # Local exploratory notebooks and system files
 notebooks/*.ipynb
