@@ -1,34 +1,31 @@
 # Supply Chain Event Network Risk
 
-Reproducible Python code for building and evaluating event-informed port disruption prediction features.
+Code for a reliability-aware ML-NLP-Network pipeline for port disruption early warning.
 
-The repository combines:
+The project predicts next-week abnormal container port activity from three public-data layers:
 
-- PortWatch-style weekly country-level container port activity.
-- WITS bilateral import dependency weights.
-- Cached GDELT GKG country-week event features.
-- Temporal benchmark models for next-week abnormal container activity.
+- **PortWatch-style operational data**: port activity, lagged shortfall, and operational vulnerability features.
+- **GDELT event signals**: own-country and partner-country external event features.
+- **WITS trade network exposure**: bilateral import-dependency weights used for network exposure, attribution, and placebo audits.
 
-The network layer is implemented as an exposure-mapping feature construction step. It should not be interpreted as a causal effect estimate.
+The network layer is an exposure-mapping and audit layer. It should not be interpreted as causal propagation evidence.
 
 ## Repository Scope
 
-This public repository is code-first. It includes only the files needed to reproduce the benchmark pipeline:
+This public repository is code-first. It intentionally excludes generated data, reports, paper drafts, private notes, credentials, and local agent handoff documents.
 
 ```text
 data/
   raw/           placeholder only
-  interim/       placeholder only; cached input files are local
-  processed/     placeholder only; generated datasets are local
+  interim/       placeholder only; cached inputs stay local
+  processed/     placeholder only; generated datasets stay local
 notebooks/
   reproduce_panel_benchmark.ipynb
-scripts/         data, modeling, robustness, and figure-generation scripts
+scripts/         data collection, feature construction, benchmarks, audits
 src/             reusable data and feature-construction helpers
-tests/           fast offline integrity tests
+tests/           offline integrity tests
 requirements.txt
 ```
-
-Private research notes, paper drafts, generated reports, large data files, notebooks with exploratory outputs, and credentials are intentionally excluded from version control.
 
 ## Setup
 
@@ -36,44 +33,71 @@ Private research notes, paper drafts, generated reports, large data files, noteb
 pip install -r requirements.txt
 ```
 
-## Required Local Inputs
+Some optional model scripts use packages such as XGBoost, LightGBM, or CatBoost when available. The core sklearn workflows remain dependency-safe.
 
-The main panel pipeline expects cached GDELT feature files under `data/interim/`:
+## Local Inputs
+
+Large and source-restricted files are not committed. The main workflows expect locally generated inputs under `data/interim/` and write outputs under `data/processed/`, `reports/`, and `outputs/`.
+
+Typical local inputs include:
 
 ```text
 data/interim/gkg_partner_event_features_2021-01-01_2025-12-31.csv
 data/interim/gkg_partner_me_strict_event_features_2021-01-01_2025-12-31.csv
 ```
 
-These files should be generated from partition-filtered GDELT GKG BigQuery queries and kept local. They are not committed to GitHub.
+GDELT GKG feature caches should be generated with partition-filtered BigQuery queries and dry-run cost checks before execution.
 
-## Reproduce
+## Main Workflow
 
-Run the full workflow from the project root:
+Run commands from the repository root. Exact availability depends on which local data caches have already been generated.
 
 ```bash
-python scripts/build_panel_benchmark_dataset.py
-python scripts/run_panel_benchmark_models.py
-python scripts/make_panel_benchmark_figures.py
-python scripts/make_supply_chain_network_overview.py
-python -m unittest discover -s tests
+# Build panel data
+python scripts/build_expanded32_panel_benchmark_dataset.py
+
+# Baseline and model-family benchmarks
+python scripts/run_panel32_benchmark_models.py
+python scripts/run_panel32_advanced_model_experiment.py
+
+# Network exposure, placebo, and guarded integration checks
+python scripts/run_panel32_network_gated_conversion_main.py
+python scripts/run_panel32_gdelt_conversion_propensity_benchmark.py
+python scripts/run_panel32_country_shared_alert_allocation.py
+
+# Reliability-aware deployment policy
+python scripts/run_panel32_high_confidence_alert_policy.py
+
+# Paper-facing tables and audit summaries generated locally
+python scripts/make_main_paper_consolidated_tables.py
+python scripts/make_main_paper_aprs_tables.py
+python scripts/make_gdelt_conversion_audit.py
 ```
 
-Or run:
+Generated outputs are local-only and ignored by Git.
 
-```text
-notebooks/reproduce_panel_benchmark.ipynb
-```
+## Additional Data Utilities
 
-Generated datasets, reports, tables, and figures are written locally under `data/processed/` and `reports/`.
+The repository also includes scripts for reproducibly fetching or building supporting inputs:
 
-## Data Sources
+- PortWatch panel variants: `scripts/fetch_portwatch_*.py`
+- WITS dependency weights: `scripts/fetch_panel32_dependency_weights.py`
+- GDELT event caches: `scripts/fetch_expanded_gdelt_*.py`
+- Scope and feasibility checks: `scripts/make_*feasibility*.py`
 
-- PortWatch-style ArcGIS service for country-level port activity.
-- World Bank WITS Trade Stats API for bilateral import dependency weights.
-- GDELT GKG via BigQuery for event signals.
+## Evaluation Principles
 
-BigQuery queries should always use partition filters and dry-run cost checks before execution.
+The benchmark uses temporal validation only. Random train/test splits are not used for final claims.
+
+Key evaluation views include:
+
+- PR-AUC for rare positive abnormal-activity weeks.
+- Top-k alert precision under fixed alert budgets.
+- Severe-event guardrails.
+- True WITS versus equal/random/shuffled placebo network audits.
+- Leave-one-country-out transfer diagnostics.
+- Subgroup checks for operational vulnerability and event conversion.
+- APRS, a reporting metric that combines predictive performance, audit reliability, and guardrail robustness.
 
 ## Tests
 
@@ -82,3 +106,11 @@ python -m unittest discover -s tests
 ```
 
 The tests check schema expectations, temporal split ordering, leakage guardrails, and deterministic placebo behavior.
+
+## Data Sources
+
+- PortWatch-style port activity services.
+- GDELT GKG via BigQuery.
+- World Bank WITS Trade Stats API.
+
+Users are responsible for complying with each source's access terms and for keeping credentials outside version control.
