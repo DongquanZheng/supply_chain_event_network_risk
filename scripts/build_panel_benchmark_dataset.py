@@ -400,7 +400,8 @@ def build_dataset(args: argparse.Namespace) -> pd.DataFrame:
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
     dataset.to_csv(output, index=False)
-    write_summary(Path(args.summary), dataset)
+    summary_file = output.relative_to(PROJECT_ROOT) if output.is_relative_to(PROJECT_ROOT) else output
+    write_summary(Path(args.summary), dataset, summary_file)
     print(f"Saved dataset: {output}")
     print(f"Rows: {len(dataset)}")
     print(f"Positive labels: {int(dataset[TARGET].sum())}")
@@ -408,7 +409,7 @@ def build_dataset(args: argparse.Namespace) -> pd.DataFrame:
     return dataset
 
 
-def write_summary(path: Path, dataset: pd.DataFrame) -> None:
+def write_summary(path: Path, dataset: pd.DataFrame, dataset_file: Path | None = None) -> None:
     country_summary = (
         dataset.groupby(["ISO3", "country"], as_index=False)
         .agg(rows=("week", "size"), positives=(TARGET, "sum"))
@@ -429,7 +430,7 @@ def write_summary(path: Path, dataset: pd.DataFrame) -> None:
 
 ## Dataset
 
-- File: `data/processed/multicountry_container_event_network_benchmark.csv`
+- File: `{dataset_file.as_posix() if dataset_file else "data/processed/multicountry_container_event_network_benchmark.csv"}`
 - Countries: {dataset["ISO3"].nunique()}
 - Rows: {len(dataset)}
 - Positive labels: {int(dataset[TARGET].sum())}

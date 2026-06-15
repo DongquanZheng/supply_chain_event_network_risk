@@ -45,6 +45,7 @@ paper/
 docs/
 
 # Exploratory analysis scripts stay local
+scripts/_archive_experiments/
 scripts/analyze_*.py
 scripts/run_nlp_taxonomy_experiment.py
 scripts/run_placebo_checks.py
