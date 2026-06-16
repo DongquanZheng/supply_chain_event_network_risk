@@ -1,0 +1,14 @@
+evaluation,paper_label,mean_main_pr_auc,mean_severe_pr_auc,main_top10_hits,main_top25_hits,severe_top25_hits
+temporal_main_ladder,Operational only,0.1922,0.1276,12,23,14
+temporal_main_ladder,Operational + GDELT,0.1933,0.1366,9,26,20
+temporal_main_ladder,Operational + GDELT + WITS additive,0.1948,0.1322,10,24,17
+temporal_main_ladder,Compact true WITS gated,0.1986,0.1350,11,23,16
+temporal_main_ladder,Equal WITS gated placebo,0.1941,0.1315,12,20,15
+temporal_main_ladder,Random WITS gated placebo,0.1861,0.1210,10,16,13
+temporal_main_ladder,Shuffled WITS gated placebo,0.1925,0.1266,10,26,17
+temporal_conversion_propensity,Conversion-propensity gated,0.1938,0.1294,12,30,19
+temporal_guarded_integration,AA9 guarded integration,0.1994,0.1319,10,28,18
+loco_transfer,LOCO operational,0.3040,0.2735,74,131,90
+loco_transfer,LOCO WITS additive,0.3312,0.2752,76,125,80
+loco_transfer,LOCO compact true gated,0.3238,0.2703,74,126,80
+loco_transfer,LOCO equal gated placebo,0.3403,0.3238,71,127,81

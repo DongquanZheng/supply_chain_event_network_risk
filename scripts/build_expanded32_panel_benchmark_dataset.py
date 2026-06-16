@@ -10,30 +10,8 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 import scripts.build_panel_benchmark_dataset as panel_builder  # noqa: E402
-from scripts.build_expanded14_panel_benchmark_dataset import EXTRA_GDELT_TO_ISO3  # noqa: E402
+from src.panel32_config import PANEL32_GDELT_TO_ISO3  # noqa: E402
 
-
-PANEL32_GDELT_TO_ISO3 = {
-    **EXTRA_GDELT_TO_ISO3,
-    "BE": "BEL",
-    "CA": "CAN",
-    "SP": "ESP",
-    "FR": "FRA",
-    "UK": "GBR",
-    "IT": "ITA",
-    "TU": "TUR",
-    "IN": "IND",
-    "BR": "BRA",
-    "MX": "MEX",
-    "PM": "PAN",
-    "CI": "CHL",
-    "SF": "ZAF",
-    "RP": "PHL",
-    "EG": "EGY",
-    "PK": "PAK",
-    "PL": "POL",
-    "SW": "SWE",
-}
 
 DEFAULT_EVENTS = (
     PROJECT_ROOT

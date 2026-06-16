@@ -1,0 +1,6 @@
+policy,mean_main_pr_auc,mean_severe_pr_auc,main_top10_hits,main_top25_hits,main_top50_hits,severe_top25_hits,recommended_aprs,best_placebo_baseline,true_vs_best_placebo_pr_auc_delta,true_vs_best_placebo_top25_delta
+proposed_high_confidence_true,0.2050,0.1267,17,31,46,18,0.8615,proposed_high_confidence_shuffled_placebo,0.0040,5
+AA9_gated_if_validation_safe_else_additive,0.1994,0.1319,10,28,51,18,0.8431,AA6_fixed_shuffled_gated_placebo,0.0048,7
+proposed_high_confidence_shuffled_placebo,0.2010,0.1214,16,26,46,14,0.5428,,,
+proposed_high_confidence_equal_placebo,0.1976,0.1232,12,28,40,15,0.5149,,,
+proposed_high_confidence_random_placebo,0.1879,0.1149,13,22,37,12,0.2850,,,

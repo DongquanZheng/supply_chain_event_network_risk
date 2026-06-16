@@ -1,0 +1,9 @@
+section,item,value,note
+Panel scope,Countries,32,Expanded32 country-week panel
+Panel scope,Country-week rows,8384,Full processed PortWatch/GDELT/WITS panel
+Panel scope,Week range,2020-12-28 to 2025-12-29,Weekly country panel
+Prediction target,Main positives,892,Next-week abnormal container activity
+Prediction target,Main positive rate,0.106,Positive weeks / country-week rows
+Prediction target,Severe positives in stress set,320,2.0-sigma severe-label guardrail from deployment checks
+Evaluation,Temporal stress rows,5024,Rows used in AA9 target-sensitivity checks
+Data sources,Main sources,PortWatch; GDELT; WITS,No fourth-source data in main claims
